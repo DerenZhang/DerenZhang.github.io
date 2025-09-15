@@ -340,83 +340,105 @@
 </section>
 
 
-    <!-- Projects Section -->
+<!-- Projects Section -->
 <section id="projects" class="section scrollspy">
   <h3 class="page-title white-text red">Projects</h3>
   <div class="container">
-    <div class="row">
+    <script>
+  // 1) Your project data (add more later)
+  const projects = [
+    {
+      title: "Aircraft Classifier",
+      date: "2024-03-01",                 // newer date = more recent
+      img: "/assets/img/uoft.jpg",
+      desc: "Developed an aircraft image classifier using CNNs, improving accuracy from 40% to 65%.",
+      tools: "PyTorch, Data Processing",
+      bullets: [
+        "ResNet-50 test accuracy 65%",
+        "VGG-19 test accuracy 60%"
+      ],
+      live: "https://github.com/DerenZhang/APS360",
+      repo: "https://github.com/DerenZhang/APS360"
+    },
+    {
+      title: "TCP Application",
+      date: "2023-11-01",
+      img: "/assets/img/uoft.jpg",
+      desc: "Group chat application using TCP socket programming.",
+      tools: "TCP libraries, C",
+      bullets: [
+        "User authentication",
+        "Create/dismiss chats, invite users, private messaging"
+      ],
+      live: "https://github.com/DerenZhang/ECE361",
+      repo: "https://github.com/DerenZhang/ECE361"
+    }
+  ];
 
-      <!-- Project 1 -->
+  // 2) sort newest → oldest by date
+  projects.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // 3) helper to build one card's HTML
+  function cardHTML(p) {
+    return `
       <div class="col s12 m6 l4">
         <div class="card medium">
           <div class="card-image waves-effect waves-block waves-light">
-            <img alt="project screenshot" src="/assets/img/uoft.jpg" 
-                 style="height: 100%; width: 100%" class="activator" />
+            <img alt="project screenshot" src="${p.img}" class="activator" style="height:100%;width:100%;" />
           </div>
           <div class="card-content">
-            <span class="card-title activator red-text hoverline">Aircraft Classifier<i
-                class="mdi-navigation-more-vert right"></i></span>
-            <p>
-              Developed an aircraft image classifier using CNNs, improving accuracy from 40% to 65%.
-            </p>
+            <span class="card-title activator red-text hoverline">
+              ${p.title}<i class="mdi-navigation-more-vert right"></i>
+            </span>
+            <p>${p.desc}</p>
           </div>
           <div class="card-reveal">
-            <span class="card-title grey-text"><small>Accomplishments</small><i
-                class="mdi-navigation-close right"></i></span>
+            <span class="card-title grey-text"><small>Accomplishments</small>
+              <i class="mdi-navigation-close right"></i></span>
             <ul>
-              <li><b>Tools:</b> PyTorch, Data Processing</li>
-              <li>Resnet-50 trained with test accuracy of 65%</li>
-              <li>VGG-19 trained with test accuracy of 60%</li>
+              <li><b>Tools:</b> ${p.tools}</li>
+              ${p.bullets.map(b => `<li>${b}</li>`).join("")}
             </ul>
             <div class="card-action">
-              <a aria-label="Visit project" href="https://github.com/DerenZhang/APS360" target="_blank"
+              <a aria-label="Visit project" href="${p.live}" target="_blank"
                  class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"
                  data-tooltip="View Online"><i class="fa fa-external-link"></i></a>
-              <a aria-label="Visit the GitHub repo for project" href="https://github.com/DerenZhang/APS360" target="_blank"
+              <a aria-label="Visit the GitHub repo for project" href="${p.repo}" target="_blank"
                  class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"
                  data-tooltip="View Source"><i class="fa fa-github"></i></a>
             </div>
           </div>
         </div>
-      </div>
+      </div>`;
+  }
 
-      <!-- Project 2 -->
-      <div class="col s12 m6 l4">
-        <div class="card medium">
-          <div class="card-image waves-effect waves-block waves-light">
-            <img alt="project screenshot" src="/assets/img/uoft.jpg" 
-                 style="height: 100%; width: 100%" class="activator" />
-          </div>
-          <div class="card-content">
-            <span class="card-title activator red-text hoverline">TCP Application<i
-                class="mdi-navigation-more-vert right"></i></span>
-            <p>
-              Group chat application developement using TCP socket programming
-            </p>
-          </div>
-          <div class="card-reveal">
-            <span class="card-title grey-text"><small>Accomplishments</small><i
-                class="mdi-navigation-close right"></i></span>
-            <ul>
-              <li><b>Tools:</b>TCP libraries, C#</li>
-              <li>User authentication</li>
-              <li>Chat creating, dismissing, user invitation, private messaging</li>
-            </ul>
-            <div class="card-action">
-              <a aria-label="Visit project" href="https://github.com/DerenZhang/ECE361" target="_blank"
-                 class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"
-                 data-tooltip="View Online"><i class="fa fa-external-link"></i></a>
-              <a aria-label="Visit the GitHub repo for project" href="https://github.com/DerenZhang/ECE361" target="_blank"
-                 class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped"
-                 data-tooltip="View Source"><i class="fa fa-github"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
+  // 4) on page load: insert ONLY the latest project
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("recent-projects");
+    if (!container || projects.length === 0) return;
+    container.insertAdjacentHTML("beforeend", cardHTML(projects[0]));
 
+    // (Step 3 later) wire up Load More
+    const btn = document.getElementById("loadMore");
+    if (btn) btn.addEventListener("click", () => {
+      // load the rest one-by-one
+      for (let i = 1; i < projects.length; i++) {
+        container.insertAdjacentHTML("beforeend", cardHTML(projects[i]));
+      }
+      btn.style.display = "none"; // hide after loading more
+    });
+  });
+</script>
+
+    <div id="recent-projects" class="row"></div>
+
+    <!-- Load more projects -->
+    <div class="center" style="margin-top:16px;">
+      <button id="loadMore" class="btn red">Load More</button>
     </div>
   </div>
 </section>
+
   
 <section id="Place traveled" class="section scrollspy">
   <h3 class="page-title white-text red">Place travelled</h3>
